@@ -17,7 +17,7 @@ test('single array correct length', () => {
 })
 
 test('toString correct', () => {
-  expect(new DbArray([1, 2, 3]).toString().endsWith('1,2,3')).toBe(true)
+  expect(new DbArray([1, 2, 3]).toString().startsWith('[KeepArray] 1,2,3')).toBe(true)
 })
 
 test('filter working', () => {

@@ -1,3 +1,5 @@
+const { arrayChange } = require('./store.js')
+
 const traps = [
   'set',
   'construct',
@@ -5,13 +7,15 @@ const traps = [
   'defineProperty'
 ]
 
-module.exports = function (callback = () => {}) {
+function proxyHandler (keepArray) {
   const handler = {}
   traps.forEach(trap => {
     handler[trap] = function (...args) {
-      callback(trap, args)
+      arrayChange(trap, keepArray, args)
       return Reflect[trap](...args)
     }
   })
   return handler
 }
+
+module.exports = proxyHandler

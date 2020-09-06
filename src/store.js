@@ -1,6 +1,9 @@
-class Datastore {
-  constructor ({ path = null, table = null }) {
-    this.defaultPath = path
-    this.defaultPath = path
+const KeepArrayTable = require('./table.js')
+
+function arrayChange (trap, keepArray, args) {
+  if (trap === 'set') {
+    console.log('SETTING', trap)
   }
 }
+
+module.exports = { arrayChange }

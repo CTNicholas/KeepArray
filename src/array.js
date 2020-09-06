@@ -1,10 +1,11 @@
-const DbProxy = require('./proxy.js')
+const proxyHandler = require('./proxy.js')
+const KeepArrayTable = require('./table.js')
 
 class DbArray extends Array {
-  constructor (inputArray = [], keepArray = {}) {
+  constructor (inputArray, keepArray) {
     super()
 
-    Object.defineProperty(this, 'keepArray', {
+    Object.defineProperty(this, 'KeepArray', {
       value: keepArray,
       writable: false
     })
@@ -20,8 +21,8 @@ class DbArray extends Array {
 }
 
 class ProxyArray {
-  constructor (...args) {
-    return new Proxy(new DbArray(...args), DbProxy())
+  constructor (inputArray = [], keepArray = {}) {
+    return new Proxy(new DbArray(inputArray, keepArray), proxyHandler(keepArray))
   }
 }
 
@@ -41,7 +42,9 @@ function addMethod (prop) {
   DbArray.prototype[prop] = function (...args) {
     const result = [][prop].bind(this, ...args)()
     if (Array.isArray(result)) {
-      return new ProxyArray(result, this.keepArray || {})
+      console.log(this.KeepArray)
+      const newTable = new KeepArrayTable(this.KeepArray.table, this.KeepArray.path || {})
+      return newTable.reconnect(result)
     }
     return result
   }
@@ -49,7 +52,10 @@ function addMethod (prop) {
 
 function overrideToString() {
   DbArray.prototype.toString = function (...args) {
-    return '[FeatherDB] ' + this.join(',')
+    let { path, table, lastWrite } = this.KeepArray
+    const date = new Date(lastWrite)
+    lastWrite = `${date.toLocaleTimeString()}, ${date.toLocaleDateString()}`
+    return `[KeepArray] ${this.join(',')} (Table: ${table}, Path: ${path}, Last write: ${lastWrite})`
   }
 }
 
