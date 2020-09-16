@@ -14,7 +14,8 @@ function createRandom () {
   let tabtest = tab.create([7, 8, 9])
   tabtest.push('lemons')
   tabtest = tabtest.map(x => x + 12)
-  console.log(tab, tabtest)
+  tabtest.push('lemons')
+  // console.log(tabtest)
   tabtest.write()
   //tab.write()
 }
@@ -22,17 +23,19 @@ function createRandom () {
 function createLemon () {
   const tab = new KeepArrayTable('fruit-lemon')
   let tabtest = tab.create([7, 8, 9])
-  tabtest.push('lemons')
+  tabtest.push('lemons ')
   tabtest = tabtest.map(x => x + 12)
-  tab.write()
+  tabtest.push('bananas ')
+  tabtest.write()
 }
 
 function updateLemon () {
   const tab = new KeepArrayTable('fruit-lemon')
-  let tabtest = tab.create([7, 8, 9])
-  tabtest.push('lemons')
-  tabtest = tabtest.map(x => x + 12)
-  tab.write()
+  let tabtest = tab.connect()
+  //console.log(tab)
+  //console.log(tabtest)
+  tabtest.push('apples')
+  tabtest.write()
 }
 
 /*

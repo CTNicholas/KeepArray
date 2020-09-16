@@ -16,13 +16,23 @@ class KeepArrayTable {
       return false
     }
     this.array = createArray(this, inputArray)
+    console.log(this.array)
     writeArray(this, this.array)
     return this.array
   }
   
   connect () {
     console.log('connect()')
+    const db = loadArray(this.name, this.path)
+
+    if (!db) {
+      console.warn(`[KeepArray] Table '${this.name}' does not exist`)
+      return null
+    } 
     
+    this.array = createArray(db, db.content)
+    console.log(this.array)
+    return this.array
     // return createArray(this, inputArray)
   }
   
@@ -42,13 +52,14 @@ module.exports = KeepArrayTable
 
 const ProxyArray = require('./array.js')
 
-function createArray (context, inputArray) {
-  return new ProxyArray(inputArray, { path: context.path, table: context.name, lastWrite: Date.now() })
+function createArray ({ path, name, lastWrite = Date.now() }, inputArray) {
+  return new ProxyArray(inputArray, { path, name, lastWrite })
 }
 
-function loadArray (table, path) {
-  table += '.json'
-  const dbContents = JSON.parse(fs.readFileSync(path.normalize(path.join(table, path))))
+function loadArray (name, filePath) {
+  name += '.json'
+  const dbContents = JSON.parse(fs.readFileSync(path.normalize(path.join(filePath, name))))
+  return dbContents || null
 }
 
 function writeArray (context, inputArray) {
