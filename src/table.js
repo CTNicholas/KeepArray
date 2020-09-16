@@ -1,9 +1,9 @@
 const path = require('path')
 const fs = require('fs')
-const options = require('./options.js')
+const state = require('./state.js')
 
 class KeepArrayTable {
-  constructor (arrayName, arrayPath = options.defaultPath) {
+  constructor (arrayName, arrayPath = state.defaultPath) {
     this.name = arrayName
     this.path = arrayPath
     this.filePath = path.join(this.path, this.name + '.json')
@@ -11,40 +11,41 @@ class KeepArrayTable {
   }
   
   create (inputArray) {
-    console.log('create()')
     if (!checkFileDirectory(this)) {
       return false
     }
     this.array = createArray(this, inputArray)
-    console.log(this.array)
     writeArray(this, this.array)
     return this.array
   }
   
   connect () {
-    console.log('connect()')
     const db = loadArray(this.name, this.path)
-
     if (!db) {
       console.warn(`[KeepArray] Table '${this.name}' does not exist`)
       return null
     } 
     
-    this.array = createArray(db, db.content)
-    console.log(this.array)
+    this.array = createArray(this, db.content)
     return this.array
-    // return createArray(this, inputArray)
   }
   
   reconnect (inputArray) {
-    console.log('reconnect()')
     this.array = createArray(this, inputArray)
     return this.array
   }
   
   write () {
-    console.log('write()')
-    writeArray(this, this.array)
+    return writeArray(this, this.array)
+  }
+
+  delete () {
+    if (deleteArray(this.name, this.filePath)) {
+      this.array = null
+      return true
+    } else {
+      return false
+    }
   }
 }
 
@@ -67,9 +68,25 @@ function writeArray (context, inputArray) {
     content: inputArray,
     meta: inputArray.KeepArray
   }
-  fs.writeFileSync(context.filePath, JSON.stringify(fileContent))
-  if (context.array) {
-    context.array.lastWrite = Date.now()
+  try {
+    fs.writeFileSync(context.filePath, JSON.stringify(fileContent))
+    if (context.array) {
+      context.array.KeepArray.lastWrite = Date.now()
+    }
+    return true
+  } catch (err) {
+    console.error(`[KeepArray] Problem writing '${context.name || 'table'}' to disk`)
+    return false
+  }
+}
+
+function deleteArray (name, filePath) {
+  try {
+    fs.unlinkSync(path.normalize(filePath))
+    return true
+  } catch (err) {
+    console.error(`[KeepArray] Table ${name} cannot be deleted`, err)
+    return false
   }
 }
 
@@ -78,7 +95,7 @@ function checkFileDirectory (context) {
     fs.mkdirSync(context.path)
   } else {
     if (fs.existsSync(context.filePath)) {
-      console.log('Table name already exists, use another name or use KeepArray.connect()')
+      console.log(`[KeepArray] Table '${context.name}' already exists, use another name or use KeepArray.connect()`)
       return false
     }
   }

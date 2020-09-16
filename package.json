@@ -7,7 +7,8 @@
     "test": "jest --watch"
   },
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "modulePathIgnorePatterns": ["tests/datastore"]
   },
   "author": "",
   "license": "ISC",

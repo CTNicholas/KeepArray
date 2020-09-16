@@ -1,5 +1,5 @@
 const proxyHandler = require('./proxy.js')
-const KeepArrayTable = require('./table.js')
+const state = require('./state.js')
 
 class DbArray extends Array {
   constructor (inputArray, keepArray) {
@@ -22,7 +22,8 @@ class DbArray extends Array {
 
 class ProxyArray {
   constructor (inputArray = [], keepArray = {}) {
-    return new Proxy(new DbArray(inputArray, keepArray), proxyHandler(keepArray))
+    const newArray = new DbArray(inputArray, keepArray)
+    return new Proxy(newArray, proxyHandler(newArray))
   }
 }
 
@@ -42,11 +43,9 @@ function addMethod (prop) {
   DbArray.prototype[prop] = function (...args) {
     const result = [][prop].bind(this, ...args)()
     if (Array.isArray(result)) {
-      console.log(this.KeepArray)
-      const newTable = new KeepArrayTable(this.KeepArray.name, this.KeepArray.path || {})
-      newTable.reconnect(result)
-      // console.log('NEWTABLE', newTable)
-      return newTable
+      const newArray = new ProxyArray(result, this.KeepArray)
+      state.change(newArray)
+      return newArray
     }
     return result
   }
@@ -54,10 +53,10 @@ function addMethod (prop) {
 
 function overrideToString() {
   DbArray.prototype.toString = function (...args) {
-    let { path, table, lastWrite } = this.KeepArray
+    let { path, name, lastWrite } = this.KeepArray
     const date = new Date(lastWrite)
     lastWrite = `${date.toLocaleTimeString()}, ${date.toLocaleDateString()}`
-    return `[KeepArray] ${this.join(',')} (Table: ${table}, Path: ${path}, Last write: ${lastWrite})`
+    return `[KeepArray] ${this.join(',')} (Table: ${name}, Path: ${path}, Last write: ${lastWrite})`
   }
 }
 
