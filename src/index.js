@@ -4,11 +4,36 @@ const ProxyArray = require('./array.js')
 
 
 
-const tab = new KeepArrayTable('fruit-' + Math.random() * 1000)
-let tabtest = tab.create([7, 8, 9])
-tabtest.push('lemons')
-tabtest = tabtest.map(x => x + 12)
-tab.write()
+
+const funcs = [createRandom, createLemon, updateLemon]
+
+funcs[0]()
+
+function createRandom () {
+  const tab = new KeepArrayTable('fruit-' + Math.random() * 1000)
+  let tabtest = tab.create([7, 8, 9])
+  tabtest.push('lemons')
+  tabtest = tabtest.map(x => x + 12)
+  console.log(tab, tabtest)
+  tabtest.write()
+  //tab.write()
+}
+
+function createLemon () {
+  const tab = new KeepArrayTable('fruit-lemon')
+  let tabtest = tab.create([7, 8, 9])
+  tabtest.push('lemons')
+  tabtest = tabtest.map(x => x + 12)
+  tab.write()
+}
+
+function updateLemon () {
+  const tab = new KeepArrayTable('fruit-lemon')
+  let tabtest = tab.create([7, 8, 9])
+  tabtest.push('lemons')
+  tabtest = tabtest.map(x => x + 12)
+  tab.write()
+}
 
 /*
 let a = new ProxyArray([1, 2, 3, '1'], { path: '', table: '', lastWrite: Date.now() })

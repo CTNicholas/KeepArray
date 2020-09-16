@@ -1,7 +1,6 @@
 const path = require('path')
 const fs = require('fs')
 const options = require('./options.js')
-const ProxyArray = require('./array.js')
 
 class KeepArrayTable {
   constructor (arrayName, arrayPath = options.defaultPath) {
@@ -10,7 +9,7 @@ class KeepArrayTable {
     this.filePath = path.join(this.path, this.name + '.json')
     return this
   }
-
+  
   create (inputArray) {
     console.log('create()')
     if (!checkFileDirectory(this)) {
@@ -20,32 +19,42 @@ class KeepArrayTable {
     writeArray(this, this.array)
     return this.array
   }
-
+  
   connect () {
+    console.log('connect()')
     
-   // return createArray(this, inputArray)
+    // return createArray(this, inputArray)
   }
-
+  
   reconnect (inputArray) {
+    console.log('reconnect()')
     this.array = createArray(this, inputArray)
     return this.array
   }
-
+  
   write () {
+    console.log('write()')
     writeArray(this, this.array)
   }
 }
 
 module.exports = KeepArrayTable
 
+const ProxyArray = require('./array.js')
+
 function createArray (context, inputArray) {
   return new ProxyArray(inputArray, { path: context.path, table: context.name, lastWrite: Date.now() })
+}
+
+function loadArray (table, path) {
+  table += '.json'
+  const dbContents = JSON.parse(fs.readFileSync(path.normalize(path.join(table, path))))
 }
 
 function writeArray (context, inputArray) {
   const fileContent = {
     content: inputArray,
-    info: inputArray.KeepArray
+    meta: inputArray.KeepArray
   }
   fs.writeFileSync(context.filePath, JSON.stringify(fileContent))
   if (context.array) {

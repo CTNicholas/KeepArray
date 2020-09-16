@@ -1,5 +1,5 @@
 const proxyHandler = require('./proxy.js')
-const KeepArrayTable = require('./table.js')
+const KeepArray = require('./main.js')
 
 class DbArray extends Array {
   constructor (inputArray, keepArray) {
@@ -43,8 +43,8 @@ function addMethod (prop) {
     const result = [][prop].bind(this, ...args)()
     if (Array.isArray(result)) {
       console.log(this.KeepArray)
-      const newTable = new KeepArrayTable(this.KeepArray.table, this.KeepArray.path || {})
-      return newTable.reconnect(result)
+      const newTable = KeepArray.reconnect(this.KeepArray.table, this.KeepArray.path || '', result)
+      return newTable
     }
     return result
   }
