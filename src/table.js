@@ -1,6 +1,7 @@
 const path = require('path')
 const fs = require('fs')
 const state = require('./state.js')
+const writeLoop = require('./loop.js')
 
 class KeepArrayTable {
   constructor (arrayName, arrayPath = state.defaultPath) {

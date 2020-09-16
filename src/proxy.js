@@ -3,7 +3,7 @@ const state = require('./state.js')
 const traps = [
   'set',
   // 'construct',
-  // 'deleteProperty',
+  'deleteProperty',
   //'defineProperty'
 ]
 

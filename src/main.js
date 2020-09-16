@@ -1,5 +1,4 @@
 const state = require('./state.js')
-const KeepArrayManager = require('./manager.js')
 const KeepArrayTable = require('./table.js')
 
 class KeepArray {
