@@ -17,7 +17,7 @@ console.log('\n\n')
 function readWrite () {
   const db = KeepArray.connect('fruit-lemon')
   db.push('hi')
-  setTimeout(() => db.push('hello'), 2000)
+  setTimeout(() => db.push(('hello')), 2000)
   setTimeout(() => db.push('two'), 3000)
   setTimeout(() => db.push('three'), 15000)
 }
