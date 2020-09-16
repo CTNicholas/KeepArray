@@ -16,7 +16,7 @@ class KeepArrayTable {
       return false
     }
     this.array = createArray(this, inputArray)
-    writeArray(this, this.array)
+    writeLoop(this.filePath, () => writeArray(this, this.array))
     return this.array
   }
   
@@ -36,8 +36,11 @@ class KeepArrayTable {
     return this.array
   }
   
-  write () {
-    return writeArray(this, this.array)
+  write (instant) {
+    if (instant) {
+      return writeArray(this, this.array)
+    }
+    return writeLoop(this.filePath, () => writeArray(this, this.array))
   }
 
   delete () {

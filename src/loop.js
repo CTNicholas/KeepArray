@@ -1,35 +1,57 @@
 const state = require('./state.js')
 
-const lastUpdate = ''
 let running = false
-let waiting = []
+let waiting = {}
 
-function writeLoop (func) {
-  waiting.push(func)
+/* 
+ *  If loop enabled, start loop
+ *  If not already waiting for db, add to list
+ *  If not already running timer, run timer with a delay (throttling)
+ */
+function writeLoop (filePath, func) {
+  if (!state.options.loop) {
+    return func()
+  }
+
+  if (waiting[filePath] === undefined) {
+    waiting[filePath] = func
+  }
+
   if (!running) {
-    timer()
+    setTimeout(() => timer(), state.options.delayTime * 1000)
   }
 }
 
 module.exports = writeLoop
 
-function timer () {
-  running = true
-
+/*
+*  Self-adjusting timer
+*  If not already running timer, run instantly
+*  
+*  When run() is activated:
+*  If changes are waiting, run all, and start  new timer
+*  If no changes, don't run new timer  
+*  
+*/
+function timer () {  
   const interval = state.options.writeTime * 1000
   let expected = Date.now() + interval
-  setTimeout(run, interval)
+  
+  if (!running) {
+    run()
+    setTimeout(run, interval)
+    running = true
+  }
 
   function run() {
-    if (waiting.length) {
+    if (Object.keys(waiting).length) {
       const time = Date.now()
       const drift = time - expected
       if (drift > interval) {
         console.warn(`[KeepArray] Timer loop out of sync`)
       }
-      waiting.forEach(func => func())
-      waiting = []
-      lastUpdate = time
+      Object.values(waiting).forEach(func => func())
+      waiting = {}
 
       expected += interval
       setTimeout(run, Math.max(0, interval - drift))

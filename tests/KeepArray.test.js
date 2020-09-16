@@ -1,7 +1,8 @@
 const KeepArray = require('../src/main.js')
 
 KeepArray.options({
-  defaultPath: './tests/datastore'
+  defaultPath: './tests/datastore',
+  loop: false
 })
 
 test('options working', () => {

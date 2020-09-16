@@ -1,5 +1,7 @@
 module.exports = {
   defaultPath: 'datastore',
   writeTime: 30,
-  overwrite: false
+  delayTime: 1,
+  overwrite: false,
+  loop: true
 }

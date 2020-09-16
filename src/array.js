@@ -1,6 +1,10 @@
 const proxyHandler = require('./proxy.js')
 const state = require('./state.js')
 
+/*
+ *  Extends array, adds hidden KeepArray properties
+ *  Initialises from inputArray
+ */
 class DbArray extends Array {
   constructor (inputArray, keepArray) {
     super()
@@ -20,6 +24,10 @@ class DbArray extends Array {
   }
 }
 
+/*
+ *  Adds a proxy to a new DbArray
+ *  When triggered calls proxyHandler ('./proxy.js')
+ */
 class ProxyArray {
   constructor (inputArray = [], keepArray = {}) {
     const newArray = new DbArray(inputArray, keepArray)
@@ -30,6 +38,10 @@ class ProxyArray {
 overrideArrayMethods()
 overrideToString()
 
+/*
+ *  Iterates through all default array methods, and passes to addMethod()
+ *  toString() ignored
+ */
 function overrideArrayMethods () {
   const arrayProps = Object.getOwnPropertyNames(Array.prototype)
   arrayProps.forEach(prop => {
@@ -39,6 +51,10 @@ function overrideArrayMethods () {
   })
 }
 
+/*
+ *  If method returns array, adds method to DbArray prototype
+ *  All methods return a new ProxyArray, and notify state of a possible change
+ */
 function addMethod (prop) {
   DbArray.prototype[prop] = function (...args) {
     const result = [][prop].bind(this, ...args)()
@@ -51,6 +67,10 @@ function addMethod (prop) {
   }
 }
 
+/* 
+ *  Overrides toString(). Example:
+ *  [KeepArray] 1,2,3 (Table: example-table, Path: datastore, Last write: 1600283836225)
+ */
 function overrideToString() {
   DbArray.prototype.toString = function (...args) {
     let { path, name, lastWrite } = this.KeepArray

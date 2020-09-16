@@ -1,5 +1,8 @@
 const state = require('./state.js')
+const catchExit = require('./exit.js')
 const KeepArrayTable = require('./table.js')
+
+catchExit()
 
 class KeepArray {
   static options (opts = {}) {
