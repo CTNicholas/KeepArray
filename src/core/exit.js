@@ -8,7 +8,7 @@ let exitHandled = false
  */
 function catchExit () {
   //so the program will not close instantly
-  process.stdin.resume()
+  // process.stdin.resume()
   if (options.saveOnExit) {
     saveOnExit()
   }

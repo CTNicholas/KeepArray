@@ -1,6 +1,6 @@
 ![KeepArray logo](logo-small.png)
 
-A tiny datastore that looks like an array. Use regular array methods, while KeepArray automatically tracks changes and saves a JSON file for you.
+A zero dependency tiny datastore/database that looks and works like an array. Use regular array methods, while KeepArray automatically tracks changes and saves a JSON file for you.
 
 # Install
 ```shell
