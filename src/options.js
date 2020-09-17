@@ -6,6 +6,9 @@ module.exports = {
   // Directory of .json table files
   defaultPath: 'datastore',
 
+  // Specifies whether connect() will create() when KeepArray not found
+  connectCanCreate: true,
+
   // Minimum time (in seconds) between disk writes if array changed - debounce
   writeTime: 5,
 

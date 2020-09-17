@@ -8,7 +8,7 @@ const KeepArrayTable = require('./core/table.js')
  */
 class KeepArray {
   /**
-   * Modifiy the default options. The input is merged with he default options
+   * Modifiy the default options. The input is merged with the default options
    * @param {Object} opts optional - An object to be combined with options
    * @returns {Object} The merged options object
    */
@@ -18,7 +18,7 @@ class KeepArray {
   }
   
   /**
-   * Creates a new KeepArray, and returns
+   * Creates a new KeepArray, and returns it
    * @param {String} name required - The name of the table 
    * @param {Array} arr optional - The base array to be converted
    * @param {String} path optional - The directory of the datastore
@@ -38,8 +38,8 @@ class KeepArray {
    * @param {String} path optional - The directory of the datastore
    * @returns {KeepArray} The KeepArray connected array
    */
-  static connect (name, canCreate = true, path = state.options.defaultPath) {
-    if (!KeepArray.exists(name, path) && canCreate) {
+  static connect (name, canCreate = state.options.connectCanCreate, path = state.options.defaultPath) {
+    if (canCreate && !KeepArray.exists(name, path)) {
       return KeepArray.create(name, [], path)
     }
 
