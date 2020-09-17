@@ -48,7 +48,7 @@ function timer () {
       const time = Date.now()
       const drift = time - expected
       if (drift > interval) {
-        console.warn(`[KeepArray] Timer loop out of sync`)
+        console.warn(`[KeepArray] WARNING: Timer loop out of sync`)
       }
       Object.values(waiting).forEach(func => func())
       waiting = {}

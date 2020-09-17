@@ -1,4 +1,4 @@
-const KeepArray = require('../src/main.js')
+const KeepArray = require('../src/index.js')
 
 KeepArray.options({
   defaultPath: './tests/datastore',
@@ -9,11 +9,12 @@ test('options working', () => {
   expect(KeepArray.options().defaultPath).toBe('./tests/datastore')
 })
 
-const table1Name = 'test-db'
+const table1Name = 'basic-table-1'
 let table1 = KeepArray.create(table1Name, [1, 2, 3])
 
-test('is array', () => {
+test('is KeepArray', () => {
   expect(Array.isArray(table1)).toBe(true)
+  expect(table1.KeepArray.name).toBe(table1Name)
 })
 
 test('array correct length', () => {
@@ -50,17 +51,4 @@ test('doesn\'t revert to array', () => {
 
 test('delete table works', () => {
   expect(KeepArray.delete(table1Name)).toBe(true)
-})
-
-const table2Name = 'permanent-test-db'
-let table2 = KeepArray.connect(table2Name)
-let lastWrite
-
-test('read table works', () => {
-  lastWrite = table2.KeepArray.lastWrite
-  expect(table2.length === 3 && table2[0] === 'one').toBe(true)
-})
-
-test('write table works', () => {
-  expect(KeepArray.write(table2Name) && table2.KeepArray.lastWrite > lastWrite).toBe(true)
 })

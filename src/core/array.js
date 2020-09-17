@@ -19,14 +19,14 @@ class DbArray extends Array {
       this[index] = val
       )
     } else {
-      console.log('Not an array')
+      console.log('[KeepArray] ERROR: Variable passed to KeepArray is not an array')
     }
   }
 }
 
 /*
  *  Adds a proxy to a new DbArray
- *  When triggered calls proxyHandler ('./proxy.js')
+ *  When proxy triggered calls proxyHandler ('./proxy.js')
  */
 class ProxyArray {
   constructor (inputArray = [], keepArray = {}) {
@@ -39,7 +39,7 @@ overrideArrayMethods()
 overrideToString()
 
 /*
- *  Iterates through all default array methods, and passes to addMethod()
+ *  Iterates through all array prototype methods, and passes to addMethod()
  *  toString() ignored
  */
 function overrideArrayMethods () {
@@ -52,8 +52,8 @@ function overrideArrayMethods () {
 }
 
 /*
- *  If method returns array, adds method to DbArray prototype
- *  All methods return a new ProxyArray, and notify state of a possible change
+ *  If method returns array, modifies method and adds to DbArray prototype
+ *  All modified methods return a new ProxyArray, and notify state of a possible change
  */
 function addMethod (prop) {
   DbArray.prototype[prop] = function (...args) {
@@ -68,7 +68,7 @@ function addMethod (prop) {
 }
 
 /* 
- *  Overrides toString(). Example:
+ *  Overrides toString(). Example output:
  *  [KeepArray] 1,2,3 (Table: example-table, Path: datastore, Last write: 1600283836225)
  */
 function overrideToString() {

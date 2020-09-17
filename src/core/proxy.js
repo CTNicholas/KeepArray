@@ -1,12 +1,16 @@
 const state = require('./state.js')
 
 const traps = [
-  'set',
   // 'construct',
-  'deleteProperty',
   //'defineProperty'
+  'deleteProperty',
+  'set'
 ]
 
+/*
+ *  Call state.change() on proxy traps defined by traps
+ *  And reflect proxy method
+ */
 function proxyHandler (keepArray) {
   const handler = {}
   traps.forEach(trap => {
